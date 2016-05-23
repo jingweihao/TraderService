@@ -8,4 +8,5 @@
     <jaxws:endpoint id = "hs" implementor = "com.service.impl.HelloImpl" address="/hs"/>
     <jaxws:endpoint id = "Search" implementor = "com.service.impl.SearchImpl" address = "/S"/>
     <jaxws:endpoint id = "PersonalSales" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS"/>
+    <jaxws:endpoint id = "BackUpBalancer" implementor = "com.getService.GetServiceImpl" address = "/BackUpBalancer"/>
 </beans>
