@@ -16,7 +16,7 @@ public class PersonalSalesImpl implements PersonalSales
 		ArrayList<Sales> list = new ArrayList<Sales>();
 		for(int i = 0; i < 50; i++)
 		{
-			list.add(new Sales("anteater.png", "Anteater", "$20000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos."));
+			list.add(new Sales(String.valueOf(i), "anteater.png", "Anteater" + i, "$20000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos."));
 		}
 		
 		System.out.println(username + " getSales Service~~");
