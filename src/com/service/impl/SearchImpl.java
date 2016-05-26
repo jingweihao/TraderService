@@ -15,7 +15,7 @@ public class SearchImpl implements Search
     	ArrayList<SearchResult> searchlist = new ArrayList<SearchResult>();
  		for(int i = 0; i < 50; i++)
  		{
- 			searchlist.add(new SearchResult(String.valueOf(i),"anteater.png", "Anteater" + i, "$1000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos."));
+ 			searchlist.add(new SearchResult(String.valueOf(i),"img/anteater.png", "Anteater" + i, "$1000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos.", "UCI", "000-000-0000"));
  		}
  		System.out.println("doSearch Service~~for " + keyword);
  		return searchlist;

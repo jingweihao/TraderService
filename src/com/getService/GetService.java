@@ -10,8 +10,12 @@ import com.data.SearchResult;
 @WebService
 public interface GetService 
 {
-	// back up the TraderBalancer
 	public ArrayList<SearchResult> SearchService(String keyword);
 	
 	public ArrayList<Sales> SalesService(String username);
+	
+	public String AddItemService(Sales sales);
+	
+	public boolean DeleteItemService(String itemid);
+	
 }
