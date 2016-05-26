@@ -14,7 +14,7 @@ public class SearchImpl implements Search
 {
      public ArrayList<SearchResult> doSearch(String keyword)
      {
-    	// TODO: S3
+    	// TODO: S3 jingweidashen
     	System.out.println("doSearch Service~~for " + keyword);    	 
     	S3Instance s3=S3Instance.getInstance();
     	
