@@ -1,8 +1,18 @@
 package com.service.impl;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.jws.WebService;
+
+import com.S3Connection.S3Instance;
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.data.SearchResult;
 import com.service.Search;
 
@@ -12,12 +22,21 @@ public class SearchImpl implements Search
      public ArrayList<SearchResult> doSearch(String keyword)
      {
     	// TODO: S3
+    	System.out.println("doSearch Service~~for " + keyword);    	 
+    	S3Instance s3=S3Instance.getInstance();
+    	
     	ArrayList<SearchResult> searchlist = new ArrayList<SearchResult>();
- 		for(int i = 0; i < 50; i++)
- 		{
- 			searchlist.add(new SearchResult(String.valueOf(i),"anteater.png", "Anteater" + i, "$1000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos."));
- 		}
- 		System.out.println("doSearch Service~~for " + keyword);
+// 		for(int i = 0; i < 50; i++)
+// 		{
+// 			searchlist.add(new SearchResult(String.valueOf(i),"anteater.png", "Anteater" + i, "$1000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos."));
+// 		}
+ 		try {
+ 			searchlist=s3.search(keyword);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+ 		
  		return searchlist;
      }
 
