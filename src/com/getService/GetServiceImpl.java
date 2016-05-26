@@ -12,7 +12,7 @@ import com.service.AddItem;
 import com.service.DeleteItem;
 import com.service.PersonalSales;
 import com.service.Search;
-//TODO: XIAOFENGDASHEN
+
 @WebService(endpointInterface = "com.getService.GetService", serviceName = "GetService")
 public class GetServiceImpl implements GetService
 {
