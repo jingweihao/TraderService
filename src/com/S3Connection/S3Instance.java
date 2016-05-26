@@ -130,9 +130,9 @@ public class S3Instance {
     	for(int i=0;i<bucketName.size();i++){
     		SearchResult temp=new SearchResult();
     		S3Object object = s3.getObject(new GetObjectRequest(bucketName.get(i), "id"));
-    		temp.setImg(displayTextInputStream(object.getObjectContent()).get(0));
+    		temp.setImgpath(displayTextInputStream(object.getObjectContent()).get(0));
     		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "img"));
-    		temp.setImg(displayTextInputStream(object.getObjectContent()).get(0));
+    		temp.setImgpath(displayTextInputStream(object.getObjectContent()).get(0));
     		temp.setName(bucketName.get(i).split("-")[1]);
     		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "price"));
     		temp.setPrice(displayTextInputStream(object.getObjectContent()).get(0));
