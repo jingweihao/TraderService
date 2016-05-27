@@ -22,6 +22,7 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.data.Sales;
 import com.data.SearchResult;
 
 public class S3Instance {
@@ -73,10 +74,10 @@ public class S3Instance {
         return ret;
     }
     
-    public void createItem(String item, String[] detail) throws IOException{
+    public void createItem(String item, Sales detail) throws IOException{
         String bucketname=item;
         String[] key=new String[5];
-        key[0]="seller";
+        key[0]="id";
         key[1]="buyer";
         key[2]="price";
         key[3]="img";
@@ -119,19 +120,20 @@ public class S3Instance {
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname=bucket.getName().split("-");
         	int diff=Math.abs(str.length()-bucketname[0].length());
-        	if(minld(str,bucketname[0])-diff<=Math.min(str.length(), bucketname[0].length())/2){
+        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
         		bucketName.add(bucket.getName());
-        	}
-        	diff=Math.abs(str.length()-bucketname[1].length());
-        	if(minld(str,bucketname[1])-diff<=Math.min(str.length(), bucketname[1].length())/2){
-        		bucketName.add(bucket.getName());
+        	}else{
+	        	diff=Math.abs(str.length()-bucketname[1].length());
+	        	if(minld(str,bucketname[1])-diff<Math.min(str.length(), bucketname[1].length())/2){
+	        		bucketName.add(bucket.getName());
+	        	}
         	}
         }  
     	for(int i=0;i<bucketName.size();i++){
     		SearchResult temp=new SearchResult();
     		S3Object object = s3.getObject(new GetObjectRequest(bucketName.get(i), "id"));
     		temp.setImgpath(displayTextInputStream(object.getObjectContent()).get(0));
-    		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "img"));
+    		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "imgpath"));
     		temp.setImgpath(displayTextInputStream(object.getObjectContent()).get(0));
     		temp.setName(bucketName.get(i).split("-")[1]);
     		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "price"));
