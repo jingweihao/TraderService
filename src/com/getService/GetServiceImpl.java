@@ -8,11 +8,14 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.data.Sales;
 import com.data.SearchResult;
+import com.data.User;
 import com.service.AddItem;
 import com.service.DeleteItem;
 import com.service.PersonalSales;
+import com.service.Register;
 import com.service.Search;
-
+import com.service.Verify;
+//TODO: XIAOFENGDASHEN
 @WebService(endpointInterface = "com.getService.GetService", serviceName = "GetService")
 public class GetServiceImpl implements GetService
 {
@@ -45,5 +48,20 @@ public class GetServiceImpl implements GetService
 		System.out.println("balance DeleteItemService in BackUP~~~~~~");
 		return di.deleteItem(itemid);
 	}
+	
+	public User VerifyService(User user)
+	{
+		Verify vr = (Verify)context.getBean("balancer5");
+		System.out.println("balance VerifyService in BackUP~~~~~~~~~");
+		return vr.verfiyUser(user);
+	}
+	
+	public boolean RegisterService(User user)
+	{
+		Register rg = (Register)context.getBean("balancer6");
+		System.out.println("balance RegisterService in BackUP~~~~~~~~");
+		return rg.registerUser(user);
+	}
+
 
 }
