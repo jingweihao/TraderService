@@ -10,5 +10,7 @@
     <jaxws:endpoint id = "PersonalSales" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS"/>
     <jaxws:endpoint id = "AddItem" implementor = "com.service.impl.AddItemImpl" address = "/ADD"/>    
     <jaxws:endpoint id = "DeleteItem" implementor = "com.service.impl.DeleteItemImpl" address = "/DEL"/>    
+    <jaxws:endpoint id = "Verify" implementor = "com.service.impl.VerifyImpl" address = "/V"/>    
+    <jaxws:endpoint id = "Register" implementor = "com.service.impl.RegisterImpl" address = "/R"/>    
     <jaxws:endpoint id = "BackUpBalancer" implementor = "com.getService.GetServiceImpl" address = "/BackUpBalancer"/>
 </beans>
