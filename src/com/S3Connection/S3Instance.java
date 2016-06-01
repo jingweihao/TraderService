@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -19,11 +20,16 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.data.Sales;
 import com.data.SearchResult;
+import com.data.User;
 
 public class S3Instance {
 	
@@ -74,20 +80,65 @@ public class S3Instance {
         return ret;
     }
     
-    public void createItem(String item, Sales detail) throws IOException{
-        String bucketname=item;
-        String[] key=new String[5];
-        key[0]="id";
-        key[1]="buyer";
-        key[2]="price";
-        key[3]="img";
-        key[4]="info";
+    public ArrayList<String> verifyPerson(User user) throws IOException{
+    	String[] bucketname=new String[3];
+    	ArrayList<String> ret=new ArrayList<String>();
+        for (Bucket bucket : s3.listBuckets()) {
+        	bucketname = bucket.getName().split("-");
+        	if(bucketname[0].equals("seller")){
+        		S3Object object = s3.getObject(new GetObjectRequest(bucket.getName(), "confirmpassword"));
+        		String temp=displayTextInputStream(object.getObjectContent()).get(0);
+        		
+	        	if(bucketname[1].equals(user.getUsername().toLowerCase()) && temp.equals(user.getPassword())){
+	        		ret.add(bucketname[2]);
+	        		ret.add(temp);
+	        		return ret;
+	        	}
+        	}
+        }  
+    	return ret;
+    }
+    
+    public boolean createPerson(User user) throws IOException{
+    	String[] bucketname=new String[3];
+        for (Bucket bucket : s3.listBuckets()) {
+        	bucketname = bucket.getName().split("-");
+        	if(bucketname[0].equals("seller")){
+	        	if(bucketname[1].equals(user.getUsername().toLowerCase())){
+	        		return false;
+	        	}
+        	}
+        }  
+        String personbucket = "seller-"+user.getUsername().toLowerCase()+"-"+user.getTel();
+        s3.createBucket(personbucket);
+        s3.putObject(new PutObjectRequest(personbucket, "password", createSampleFile(user.getPassword())));
+        s3.putObject(new PutObjectRequest(personbucket, "confirmpassword", createSampleFile(user.getConfirmpassword())));
+        return true;
+    }
+    
+    public String createItem(Sales detail) throws IOException{
+    	String itemId = UUID.randomUUID().toString().replace("-", "");
+        String bucketname = detail.getCategory().toLowerCase()+"-"+detail.getName().toLowerCase()+"-"+itemId;
+        String name = detail.getSellername().toLowerCase();
         try {
         	s3.createBucket(bucketname);
             System.out.println("Uploading a new object to S3 from a file\n");
-            for(int i=0;i<5;i++){
-            	s3.putObject(new PutObjectRequest(bucketname, key[i], createSampleFile(detail[i])));
+            s3.putObject(new PutObjectRequest(bucketname, "id", createSampleFile(itemId)));
+            s3.putObject(new PutObjectRequest(bucketname, "imgpath", createSampleFile(detail.getImgpath())));
+            s3.putObject(new PutObjectRequest(bucketname, "price", createSampleFile(detail.getPrice())));
+            s3.putObject(new PutObjectRequest(bucketname, "info", createSampleFile(detail.getInfo())));
+            s3.putObject(new PutObjectRequest(bucketname, "sellername", createSampleFile(detail.getSellername())));
+            s3.putObject(new PutObjectRequest(bucketname, "sellertel", createSampleFile(detail.getSellertel())));
+        	String[] bucketName=new String[3];
+            for (Bucket bucket : s3.listBuckets()) {
+            	bucketName = bucket.getName().split("-");
+            	if(bucketName[0].equals("seller")){
+    	        	if(bucketName[1].equals(name)){
+    	        		s3.putObject(new PutObjectRequest(bucket.getName(), itemId, createSampleFile("")));
+    	        	}
+            	}
             }
+            return itemId;
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means your request made it "
                     + "to Amazon S3, but was rejected with an error response for some reason.");
@@ -102,15 +153,39 @@ public class S3Instance {
                     + "such as not being able to access the network.");
             System.out.println("Error Message: " + ace.getMessage());
         }
+        return "fail to create item...";
     }
     
-    public void delete(String bucketname){
-//    	String key="";
-//    	System.out.println("Deleting an object\n");
-//    	s3.deleteObject(bucketname, key);
-
-    	System.out.println("Deleting bucket " + bucketname + "\n");
-    	s3.deleteBucket(bucketname);
+    public boolean delete(String itemid) throws IOException{
+    	boolean success1=false;
+    	boolean success2=false;
+    	String name="";
+    	String[] bucketname=new String[3];
+        for (Bucket bucket : s3.listBuckets()) {
+        	bucketname = bucket.getName().split("-");
+        	if(!bucketname[0].equals("seller") && success1==false){
+	        	if(bucketname[2].equals(itemid)){
+	        		S3Object object = s3.getObject(new GetObjectRequest(bucket.getName(), "sellername"));
+	        		name = displayTextInputStream(object.getObjectContent()).get(0);
+	        		s3.deleteObject(bucket.getName(), "id");
+	        		s3.deleteObject(bucket.getName(), "imgpath");
+	        		s3.deleteObject(bucket.getName(), "info");
+	        		s3.deleteObject(bucket.getName(), "price");
+	        		s3.deleteObject(bucket.getName(), "sellername");
+	        		s3.deleteObject(bucket.getName(), "sellertel");
+	        		s3.deleteBucket(bucket.getName());
+	        		success1=true;
+	        	}
+        	}else{
+        		if(success2==false){
+	        		if(bucketname[1].equals(name)){
+	        			s3.deleteObject(new DeleteObjectRequest(bucket.getName(),itemid));
+	        			success2=true;
+	        		}
+        		}
+        	}
+        }  	
+    	return success1 && success2;
     }
     
     public ArrayList<SearchResult> search(String str) throws IOException{
@@ -118,14 +193,16 @@ public class S3Instance {
     	String[] bucketname=new String[3];
     	ArrayList<String> bucketName=new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {
-        	bucketname=bucket.getName().split("-");
-        	int diff=Math.abs(str.length()-bucketname[0].length());
-        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
-        		bucketName.add(bucket.getName());
-        	}else{
-	        	diff=Math.abs(str.length()-bucketname[1].length());
-	        	if(minld(str,bucketname[1])-diff<Math.min(str.length(), bucketname[1].length())/2){
+        	bucketname = bucket.getName().split("-");
+        	if(!bucketname[0].equals("seller")){
+	        	int diff=Math.abs(str.length()-bucketname[0].length());
+	        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
 	        		bucketName.add(bucket.getName());
+	        	}else{
+		        	diff=Math.abs(str.length()-bucketname[1].length());
+		        	if(minld(str,bucketname[1])-diff<Math.min(str.length(), bucketname[1].length())/2){
+		        		bucketName.add(bucket.getName());
+		        	}
 	        	}
         	}
         }  
@@ -140,8 +217,56 @@ public class S3Instance {
     		temp.setPrice(displayTextInputStream(object.getObjectContent()).get(0));
     		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "info"));
     		temp.setInfo(displayTextInputStream(object.getObjectContent()).get(0));
+    		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "sellername"));
+    		temp.setSellername(displayTextInputStream(object.getObjectContent()).get(0));
+    		object = s3.getObject(new GetObjectRequest(bucketName.get(i), "sellertel"));
+    		temp.setSellertel(displayTextInputStream(object.getObjectContent()).get(0));
     		ret.add(temp);
     	}
+    	return ret;
+    }
+    
+    public ArrayList<Sales> searchPerson(String username) throws IOException{
+    	ArrayList<Sales> ret = new ArrayList<Sales>();
+    	String[] bucketname=new String[3];
+    	ArrayList<String> rec = new ArrayList<String>();
+        for (Bucket bucket : s3.listBuckets()) {
+        	bucketname = bucket.getName().split("-");
+        	if(bucketname[0].equals("seller")){
+	        	if(bucketname[1].equals(username)){
+	                ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
+	                        .withBucketName(bucket.getName())
+	                        .withPrefix(""));
+	                for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+	                    rec.add(objectSummary.getKey());           
+	                }
+	                break;
+	        	}
+        	}
+        }
+        String[] bucketname2=new String[3];
+        for(Bucket bucket2 : s3.listBuckets()){
+        	bucketname2 = bucket2.getName().split("-");
+        	for(int i=0;i<rec.size();i++){
+            	if(bucketname2[2].equals(rec.get(i))){
+            		Sales temp=new Sales();
+            		S3Object object = s3.getObject(new GetObjectRequest(bucket2.getName(), "id"));
+            		temp.setId(bucketname2[2]);
+            		object = s3.getObject(new GetObjectRequest(bucket2.getName(), "imgpath"));
+            		temp.setImgpath(displayTextInputStream(object.getObjectContent()).get(0));
+            		temp.setName(bucketname2[1]);
+            		object = s3.getObject(new GetObjectRequest(bucket2.getName(), "price"));
+            		temp.setPrice(displayTextInputStream(object.getObjectContent()).get(0));
+            		object = s3.getObject(new GetObjectRequest(bucket2.getName(), "info"));
+            		temp.setInfo(displayTextInputStream(object.getObjectContent()).get(0));
+            		temp.setCategory(bucketname2[0]);
+            		temp.setSellername(username);
+            		object = s3.getObject(new GetObjectRequest(bucket2.getName(), "sellertel"));
+            		temp.setSellertel(displayTextInputStream(object.getObjectContent()).get(0));
+            		ret.add(temp);
+            	}
+        	}
+        }
     	return ret;
     }
     

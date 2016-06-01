@@ -1,8 +1,10 @@
 package com.service.impl;
 
+import java.io.IOException;
 import java.util.*;
 import javax.jws.WebService;
 
+import com.S3Connection.S3Instance;
 import com.data.Sales;
 import com.service.PersonalSales;
 
@@ -13,12 +15,18 @@ public class PersonalSalesImpl implements PersonalSales
 	public ArrayList<Sales> getSales(String username) 
 	{
 		// TODO: S3
+		S3Instance s3 = S3Instance.getInstance();
 		ArrayList<Sales> list = new ArrayList<Sales>();
-		for(int i = 0; i < 50; i++)
-		{
-			list.add(new Sales(String.valueOf(i), "img/anteater.png", "Anteater" + i, "$20000", "The anteaters are more closely related to the sloths than they are to any other group of mammals. Their next closest relations are armadillos.", "Home", "UCI", "000-000-0000"));
+		try {
+			list = s3.searchPerson(username);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
+		System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			System.out.println(list.get(i));
+		}
 		System.out.println(username + " getSales Service~~");
 		return list;
 
