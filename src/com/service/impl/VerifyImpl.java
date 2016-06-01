@@ -2,8 +2,12 @@ package com.service.impl;
 
 import javax.jws.WebService;
 
+import com.S3Connection.S3Instance;
 import com.data.User;
 import com.service.Verify;
+
+import java.io.IOException;
+import java.util.*;
 
 @WebService(endpointInterface = "com.service.Verify", serviceName = "VerifyService")
 public class VerifyImpl implements Verify
@@ -11,17 +15,21 @@ public class VerifyImpl implements Verify
 
 	public User verfiyUser(User user) 
 	{
-		//TODO:S3
-		String verify_username = user.getUsername();
-		String verify_password = user.getPassword();
-		int i = 1;
-		if(i == 1)
-		{
-			// correct;
-			String get_tel = "999-999-9999";
-			user.setConfirmpassword(verify_password);
-			user.setTel(get_tel);
-			return user;
+		//S3
+		S3Instance s3 = S3Instance.getInstance();
+		ArrayList<String> result=new ArrayList<String>();
+		try {
+			result=s3.verifyPerson(user);
+			if(result.size()!=0)
+			{
+				// correct;
+				user.setConfirmpassword(result.get(1));
+				user.setTel(result.get(0));
+				return user;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		// else
 		return null;
