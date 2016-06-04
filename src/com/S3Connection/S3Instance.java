@@ -40,7 +40,7 @@ public class S3Instance {
 	{
 		AWSCredentials credentials = null;
         try {
-            credentials = new ProfileCredentialsProvider("default").getCredentials();
+//            credentials = new ProfileCredentialsProvider("default").getCredentials();
             credentials = new BasicAWSCredentials("AKIAJMDC4NCM6KLE24BQ","GyX4zHGbLdaGOoC4UsRG/bTgLop08TZEo16o67zt");
         } catch (Exception e) {
             throw new AmazonClientException(
@@ -234,7 +234,7 @@ public class S3Instance {
     	ArrayList<String> rec = new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
-        	if(bucketname[0].equals("seller")){
+        	if(bucketname.length == 3 && bucketname[0].equals("seller")){
 	        	if(bucketname[1].equals(username)){
 	                ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
 	                        .withBucketName(bucket.getName())
@@ -250,7 +250,7 @@ public class S3Instance {
         for(Bucket bucket2 : s3.listBuckets()){
         	bucketname2 = bucket2.getName().split("-");
         	for(int i=0;i<rec.size();i++){
-            	if(bucketname2[2].equals(rec.get(i))){
+            	if(bucketname2.length == 3 && bucketname2[2].equals(rec.get(i))){
             		Sales temp=new Sales();
             		S3Object object = s3.getObject(new GetObjectRequest(bucket2.getName(), "id"));
             		temp.setId(bucketname2[2]);
