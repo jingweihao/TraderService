@@ -90,7 +90,6 @@ public class S3Instance {
         	if(bucketname.length == 3 && bucketname[0].equals("seller")){
         		S3Object object = s3.getObject(new GetObjectRequest(bucket.getName(), "confirmpassword"));
         		String temp=displayTextInputStream(object.getObjectContent()).get(0);
-        		
 	        	if(bucketname[1].equals(user.getUsername().toLowerCase()) && temp.equals(user.getPassword())){
 	        		ret.add(bucketname[2]);
 	        		ret.add(temp);
@@ -235,7 +234,7 @@ public class S3Instance {
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
         	if(bucketname.length == 3 && bucketname[0].equals("seller")){
-	        	if(bucketname[1].equals(username)){
+	        	if(bucketname[1].equals(username.toLowerCase())){
 	                ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
 	                        .withBucketName(bucket.getName())
 	                        .withPrefix(""));
