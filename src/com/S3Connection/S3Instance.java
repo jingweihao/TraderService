@@ -87,7 +87,7 @@ public class S3Instance {
     	ArrayList<String> ret=new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
-        	if(bucketname[0].equals("seller")){
+        	if(bucketname.length == 3 && bucketname[0].equals("seller")){
         		S3Object object = s3.getObject(new GetObjectRequest(bucket.getName(), "confirmpassword"));
         		String temp=displayTextInputStream(object.getObjectContent()).get(0);
         		
@@ -105,7 +105,7 @@ public class S3Instance {
     	String[] bucketname=new String[3];
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
-        	if(bucketname[0].equals("seller")){
+        	if(bucketname.length == 3 && bucketname[0].equals("seller")){
 	        	if(bucketname[1].equals(user.getUsername().toLowerCase())){
 	        		return false;
 	        	}
@@ -165,7 +165,7 @@ public class S3Instance {
     	String[] bucketname=new String[3];
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
-        	if(!bucketname[0].equals("seller") && success1==false){
+        	if(bucketname.length == 3 && !bucketname[0].equals("seller") && success1==false){
 	        	if(bucketname[2].equals(itemid)){
 	        		S3Object object = s3.getObject(new GetObjectRequest(bucket.getName(), "sellername"));
 	        		name = displayTextInputStream(object.getObjectContent()).get(0);
@@ -179,7 +179,7 @@ public class S3Instance {
 	        		success1=true;
 	        	}
         	}else{
-        		if(success2==false){
+        		if(bucketname.length == 3 && success2==false){
 	        		if(bucketname[1].equals(name)){
 	        			s3.deleteObject(new DeleteObjectRequest(bucket.getName(),itemid));
 	        			success2=true;
@@ -196,7 +196,7 @@ public class S3Instance {
     	ArrayList<String> bucketName=new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {
         	bucketname = bucket.getName().split("-");
-        	if(!bucketname[0].equals("seller")){
+        	if(bucketname.length == 3 && !bucketname[0].equals("seller")){
 	        	int diff=Math.abs(str.length()-bucketname[0].length());
 	        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
 	        		bucketName.add(bucket.getName());
