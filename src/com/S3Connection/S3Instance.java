@@ -228,7 +228,7 @@ public class S3Instance {
     }
     
     public ArrayList<Sales> searchPerson(String username) throws IOException{
-    	ArrayList<Sales> ret = new ArrayList<Sales>();
+    	ArrayList<Sales> ret = new ArrayList<Sales>();    	
     	String[] bucketname=new String[3];
     	ArrayList<String> rec = new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {

@@ -42,11 +42,11 @@ public class GetServiceImpl implements GetService
 		return ai.addItem(sales);
 	}
 	
-	public boolean DeleteItemService(String itemid)
+	public boolean DeleteItemService(String category, String itemname, String itemid)
 	{
 		DeleteItem di = (DeleteItem)context.getBean("balancer4");
 		System.out.println("balance DeleteItemService in BackUP~~~~~~");
-		return di.deleteItem(itemid);
+		return di.deleteItem(category, itemname, itemid);
 	}
 	
 	public User VerifyService(User user)
