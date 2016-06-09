@@ -34,8 +34,8 @@ import com.data.User;
 public class S3Instance2 {
 	
 	private AmazonS3 s3;
-	private static String itembucket = "itemcollection";
-	private static String personbucket = "personcollection";
+	private static String itembucket = "itemcollection1";
+	private static String personbucket = "personcollection1";
 	
 	private S3Instance2()
 	{
@@ -240,12 +240,12 @@ public class S3Instance2 {
         	S3Object object = s3.getObject(new GetObjectRequest(personbucket, name));
     		temp = displayTextInputStream(object.getObjectContent());
         }
-        for(int i=0; i<temp.size(); i++){
-        	objectListing = s3.listObjects(new ListObjectsRequest()
-	                .withBucketName(itembucket)
-	                .withPrefix(temp.get(i)));
-        	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
-	        	String name2 = objectSummary.getKey();
+        for(int i=2; i<temp.size(); i++){
+        	ObjectListing objectListing2 = s3.listObjects(new ListObjectsRequest()
+                    .withBucketName(itembucket)
+                    .withPrefix(temp.get(i)));
+        	for(S3ObjectSummary objectSummary2 : objectListing2.getObjectSummaries()){
+	        	String name2 = objectSummary2.getKey();
 	        	S3Object object2 = s3.getObject(new GetObjectRequest(itembucket, name2));
 	    		ArrayList<String> temp2 = displayTextInputStream(object2.getObjectContent());
 	    		Sales putin = new Sales();
