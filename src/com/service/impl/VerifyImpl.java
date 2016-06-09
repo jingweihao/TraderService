@@ -2,7 +2,7 @@ package com.service.impl;
 
 import javax.jws.WebService;
 
-import com.S3Connection.S3Instance;
+import com.S3Connection.S3Instance2;
 import com.data.User;
 import com.service.Verify;
 
@@ -16,7 +16,7 @@ public class VerifyImpl implements Verify
 	public User verfiyUser(User user) 
 	{
 		//S3
-		S3Instance s3 = S3Instance.getInstance();
+		S3Instance2 s3 = S3Instance2.getInstance();
 		ArrayList<String> result=new ArrayList<String>();
 		try {
 			result=s3.verifyPerson(user);

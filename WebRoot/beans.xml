@@ -5,7 +5,7 @@
       xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
-    <jaxws:endpoint id = "hs" implementor = "com.service.impl.HelloImpl" address="/hs"/>
+    <jaxws:endpoint id = "hw1" implementor = "com.service.impl.Hello1Impl" address="/hw1"/>
     <jaxws:endpoint id = "Search" implementor = "com.service.impl.SearchImpl" address = "/S"/>
     <jaxws:endpoint id = "PersonalSales" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS"/>
     <jaxws:endpoint id = "AddItem" implementor = "com.service.impl.AddItemImpl" address = "/ADD"/>    

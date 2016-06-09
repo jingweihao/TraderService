@@ -41,7 +41,11 @@ public class S3Instance {
 		AWSCredentials credentials = null;
         try {
             credentials = new ProfileCredentialsProvider("default").getCredentials();
+<<<<<<< HEAD
 //            credentials = new BasicAWSCredentials("");
+=======
+//            credentials = new BasicAWSCredentials();
+>>>>>>> master
         } catch (Exception e) {
             throw new AmazonClientException(
                     "Cannot load the credentials from the credential profiles file. " +
@@ -228,7 +232,7 @@ public class S3Instance {
     }
     
     public ArrayList<Sales> searchPerson(String username) throws IOException{
-    	ArrayList<Sales> ret = new ArrayList<Sales>();
+    	ArrayList<Sales> ret = new ArrayList<Sales>();    	
     	String[] bucketname=new String[3];
     	ArrayList<String> rec = new ArrayList<String>();
         for (Bucket bucket : s3.listBuckets()) {
