@@ -229,6 +229,7 @@ public class S3Instance2 {
     public ArrayList<Sales> searchPerson(String username) throws IOException{
     	ArrayList<Sales> ret = new ArrayList<Sales>();
     	ArrayList<String> temp = new ArrayList<String>();
+    	username += "-";
     	ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName(personbucket)
                 .withPrefix(username));
