@@ -53,12 +53,12 @@ public class S3Instance2 {
         s3.setRegion(usWest2);
 	}
 	
-    private static final S3Instance2 s3instance = new S3Instance2();
+    private static final S3Instance2 s3instance2 = new S3Instance2();
 	
 	public static S3Instance2 getInstance()
 	{
-		System.out.println("Get Instance~~~~~~~~");
-		return s3instance;
+		System.out.println("Get Instance222222~~~~~~~~");
+		return s3instance2;
 	}
 	
     private static File createSampleFile(ArrayList<String> detail) throws IOException {
@@ -84,30 +84,32 @@ public class S3Instance2 {
     }
     
     public ArrayList<String> verifyPerson(User user) throws IOException{
-    	String personname = user.getUsername()+"/"+user.getTel();
+    	String personname = user.getUsername();
     	ArrayList<String> temp = new ArrayList<String>();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName("myperson")
                 .withPrefix(personname));
-        if(objectListing.getObjectSummaries()==null){
+        if(objectListing.getObjectSummaries().size()==0){
         	return temp;
         }
-    	S3Object object = s3.getObject(new GetObjectRequest("myperson", personname));
-		ArrayList<String> t = displayTextInputStream(object.getObjectContent());
-		if(user.getPassword().equals(t.get(1))){
-			temp.add(user.getUsername());
-			temp.add(user.getPassword());
-		}
-		object.close();
+        for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
+        	S3Object object = s3.getObject(new GetObjectRequest("myperson", objectSummary.getKey()));
+        	ArrayList<String> t = displayTextInputStream(object.getObjectContent());
+    		if(user.getPassword().equals(t.get(1))){
+    			temp.add(user.getUsername());
+    			temp.add(user.getPassword());
+    		}
+    		object.close();
+        }
     	return temp;
     }
     
     public boolean createPerson(User user) throws IOException{
-    	String personname = user.getUsername()+"/"+user.getTel();
+    	String personname = user.getUsername()+"-"+user.getTel();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName("myperson")
-                .withPrefix(personname));
-        if(objectListing.getObjectSummaries()!=null){
+                .withPrefix(user.getUsername()));
+        if(objectListing.getObjectSummaries().size()!=0){
         	return false;
         }
     	ArrayList<String> temp = new ArrayList<String>();
@@ -119,7 +121,7 @@ public class S3Instance2 {
 	
 	public String createItem(Sales detail) throws IOException{
 		String itemId = UUID.randomUUID().toString().replace("-", "");
-		String objname = detail.getCategory()+"/"+detail.getName()+"/"+itemId;
+		String objname = detail.getCategory()+"/"+detail.getName()+"-"+itemId;
 		ArrayList<String> content = new ArrayList<String>();
 		content.add(itemId);
 		content.add(detail.getPrice());
@@ -128,7 +130,7 @@ public class S3Instance2 {
 		content.add(detail.getSellername().toLowerCase());
 		content.add(detail.getSellertel());
 		s3.putObject(new PutObjectRequest("myitem", objname, createSampleFile(content)));
-    	String personname = detail.getSellername().toLowerCase()+"/"+detail.getSellertel();
+    	String personname = detail.getSellername().toLowerCase()+"-"+detail.getSellertel();
     	S3Object object = s3.getObject(new GetObjectRequest("myperson", personname));
 		ArrayList<String> temp = displayTextInputStream(object.getObjectContent());
 		temp.add(objname);
@@ -137,7 +139,7 @@ public class S3Instance2 {
 	}
 	
 	public boolean delete(String category, String itemname, String itemid, String personname) throws IOException{
-    	String name1 = category+"/"+itemname+"/"+itemid;
+    	String name1 = category+"-"+itemname+"-"+itemid;
     	s3.deleteObject("myitem", name1);
     	String name2 = personname;
     	S3Object object = s3.getObject(new GetObjectRequest("myperson", name2));
@@ -157,7 +159,7 @@ public class S3Instance2 {
 	        ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
 	                .withBucketName("myitem")
 	                .withPrefix(str));
-	        if(objectListing.getObjectSummaries()!=null){
+	        if(objectListing.getObjectSummaries().size()!=0){
 	        	found = true;
 	        }
 	        for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
@@ -171,7 +173,7 @@ public class S3Instance2 {
 	    		col.setImgpath(temp.get(3));
 	    		col.setSellername(temp.get(4));
 	    		col.setSellertel(temp.get(5));
-	    		col.setName(key.split("/")[1]);
+	    		col.setName(key.split("-")[1]);
 	    		ret.add(col);
 	    		object.close();
 	        }
@@ -182,7 +184,7 @@ public class S3Instance2 {
 	        	ArrayList<String> match = new ArrayList<String>();
 	        	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
 	 	        	String name = objectSummary.getKey();
-	 	        	String[] bucketname = name.split("/");	        	
+	 	        	String[] bucketname = name.split("-");	        	
  		        	if(bucketname.length == 3){
  		        		int diff=Math.abs(str.length()-bucketname[0].length());
 	 		        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
@@ -205,7 +207,7 @@ public class S3Instance2 {
 		    		col2.setImgpath(temp2.get(3));
 		    		col2.setSellername(temp2.get(4));
 		    		col2.setSellertel(temp2.get(5));
-		    		col2.setName(match.get(i).split("/")[1]);
+		    		col2.setName(match.get(i).split("-")[1]);
 		    		ret.add(col2);
 	        	}
 	        }  	
@@ -218,7 +220,7 @@ public class S3Instance2 {
 	    	ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
 	                .withBucketName("myperson")
 	                .withPrefix(username));
-	        if(objectListing.getObjectSummaries()!=null){
+	        if(objectListing.getObjectSummaries().size()!=0){
 	        	return ret;
 	        }
 	        for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
@@ -241,8 +243,8 @@ public class S3Instance2 {
 		    		putin.setImgpath(temp2.get(3));
 		    		putin.setSellername(temp2.get(4));
 		    		putin.setSellertel(temp2.get(5));
-		    		putin.setCategory(name2.split("/")[0]);
-		    		putin.setName(name2.split("/")[1]);
+		    		putin.setCategory(name2.split("-")[0]);
+		    		putin.setName(name2.split("-")[1]);
 		    		ret.add(putin);
 		        }
 	        }

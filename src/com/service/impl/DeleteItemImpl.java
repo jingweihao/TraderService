@@ -16,7 +16,7 @@ public class DeleteItemImpl implements DeleteItem
 		boolean ret=false;
 		S3Instance2 s3=S3Instance2.getInstance();
 		try {
-			ret = s3.delete(itemid);
+			ret = s3.delete (category, itemname, itemid, sellername);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
