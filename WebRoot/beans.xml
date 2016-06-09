@@ -6,8 +6,51 @@
     <import resource="classpath:META-INF/cxf/cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
     <jaxws:endpoint id = "hw1" implementor = "com.service.impl.Hello1Impl" address="/hw1"/>
+    <jaxws:endpoint id = "hw2" implementor = "com.service.impl.Hello1Impl" address="/hw2"/>
+    <jaxws:endpoint id = "hw3" implementor = "com.service.impl.Hello1Impl" address="/hw3"/>
+    <jaxws:endpoint id = "hw4" implementor = "com.service.impl.Hello1Impl" address="/hw4"/>
+    <jaxws:endpoint id = "hw5" implementor = "com.service.impl.Hello1Impl" address="/hw5"/>
+    <jaxws:endpoint id = "hw6" implementor = "com.service.impl.Hello1Impl" address="/hw6"/>
+    <jaxws:endpoint id = "hw7" implementor = "com.service.impl.Hello1Impl" address="/hw7"/>
+    <jaxws:endpoint id = "hw8" implementor = "com.service.impl.Hello1Impl" address="/hw8"/>
+    <jaxws:endpoint id = "hw9" implementor = "com.service.impl.Hello1Impl" address="/hw9"/>
+    <jaxws:endpoint id = "hw10" implementor = "com.service.impl.Hello1Impl" address="/hw10"/>
+    
     <jaxws:endpoint id = "Search" implementor = "com.service.impl.SearchImpl" address = "/S"/>
+    <jaxws:endpoint id = "Search1" implementor = "com.service.impl.SearchImpl" address = "/S1"/>
+    <jaxws:endpoint id = "Search2" implementor = "com.service.impl.SearchImpl" address = "/S2"/>
+    <jaxws:endpoint id = "Search3" implementor = "com.service.impl.SearchImpl" address = "/S3"/>
+    <jaxws:endpoint id = "Search4" implementor = "com.service.impl.SearchImpl" address = "/S4"/>
+    <jaxws:endpoint id = "Search5" implementor = "com.service.impl.SearchImpl" address = "/S5"/>
+    <jaxws:endpoint id = "Search6" implementor = "com.service.impl.SearchImpl" address = "/S6"/>
+    <jaxws:endpoint id = "Search7" implementor = "com.service.impl.SearchImpl" address = "/S7"/>
+    <jaxws:endpoint id = "Search8" implementor = "com.service.impl.SearchImpl" address = "/S8"/>
+    <jaxws:endpoint id = "Search9" implementor = "com.service.impl.SearchImpl" address = "/S9"/>
+    <jaxws:endpoint id = "Search10" implementor = "com.service.impl.SearchImpl" address = "/S10"/>
+    
     <jaxws:endpoint id = "PersonalSales" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS"/>
+    <jaxws:endpoint id = "PersonalSales1" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS1"/>
+    <jaxws:endpoint id = "PersonalSales2" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS2"/>
+    <jaxws:endpoint id = "PersonalSales3" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS3"/>
+    <jaxws:endpoint id = "PersonalSales4" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS4"/>
+    <jaxws:endpoint id = "PersonalSales5" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS5"/>
+    <jaxws:endpoint id = "PersonalSales6" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS6"/>
+    <jaxws:endpoint id = "PersonalSales7" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS7"/>
+    <jaxws:endpoint id = "PersonalSales8" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS8"/>
+    <jaxws:endpoint id = "PersonalSales9" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS9"/>
+    <jaxws:endpoint id = "PersonalSales10" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS10"/>
+    <jaxws:endpoint id = "PersonalSales11" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS11"/>
+    <jaxws:endpoint id = "PersonalSales12" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS12"/>
+    <jaxws:endpoint id = "PersonalSales13" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS13"/>
+    <jaxws:endpoint id = "PersonalSales14" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS14"/>
+    <jaxws:endpoint id = "PersonalSales15" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS15"/>
+    <jaxws:endpoint id = "PersonalSales16" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS16"/>
+    <jaxws:endpoint id = "PersonalSales17" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS17"/>
+    <jaxws:endpoint id = "PersonalSales18" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS18"/>
+    <jaxws:endpoint id = "PersonalSales19" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS19"/>
+    <jaxws:endpoint id = "PersonalSales20" implementor = "com.service.impl.PersonalSalesImpl" address = "/PS20"/>
+    
+    
     <jaxws:endpoint id = "AddItem" implementor = "com.service.impl.AddItemImpl" address = "/ADD"/>    
     <jaxws:endpoint id = "DeleteItem" implementor = "com.service.impl.DeleteItemImpl" address = "/DEL"/>    
     <jaxws:endpoint id = "Verify" implementor = "com.service.impl.VerifyImpl" address = "/V"/>    
