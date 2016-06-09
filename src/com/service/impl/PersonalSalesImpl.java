@@ -29,7 +29,5 @@ public class PersonalSalesImpl implements PersonalSales
 		}
 		System.out.println(username + " getSales Service~~");
 		return list;
-
 	}
-
 }
