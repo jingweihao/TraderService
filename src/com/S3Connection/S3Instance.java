@@ -40,8 +40,8 @@ public class S3Instance {
 	{
 		AWSCredentials credentials = null;
         try {
-//            credentials = new ProfileCredentialsProvider("default").getCredentials();
-            credentials = new BasicAWSCredentials("AKIAJMDC4NCM6KLE24BQ","GyX4zHGbLdaGOoC4UsRG/bTgLop08TZEo16o67zt");
+            credentials = new ProfileCredentialsProvider("default").getCredentials();
+//            credentials = new BasicAWSCredentials("");
         } catch (Exception e) {
             throw new AmazonClientException(
                     "Cannot load the credentials from the credential profiles file. " +
