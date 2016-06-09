@@ -122,7 +122,7 @@ public class S3Instance2 {
 	
 	public String createItem(Sales detail) throws IOException{
 		String itemId = UUID.randomUUID().toString().replace("-", "");
-		String objname = detail.getCategory()+"-"+detail.getName()+"-"+itemId;
+		String objname = detail.getCategory().toLowerCase()+"-"+detail.getName()+"-"+itemId;
 		ArrayList<String> content = new ArrayList<String>();
 		content.add(itemId);
 		content.add(detail.getPrice());
@@ -141,7 +141,7 @@ public class S3Instance2 {
 	}
 	
 	public boolean delete(String category, String itemname, String itemid, String personname) throws IOException{
-    	String name1 = category+"-"+itemname+"-"+itemid;
+    	String name1 = category.toLowerCase()+"-"+itemname+"-"+itemid;
     	s3.deleteObject("myitem", name1);
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName("myperson")
@@ -162,6 +162,7 @@ public class S3Instance2 {
 	 }
 	    
     public ArrayList<SearchResult> search(String str) throws IOException{
+    	System.out.println("llllllllllllllllllllllokkkkkkkk");
     	Boolean found = false;
     	ArrayList<SearchResult> ret=new ArrayList<SearchResult>();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
@@ -172,6 +173,7 @@ public class S3Instance2 {
         }
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
         	String key = objectSummary.getKey();
+        	System.out.println("fffffffffffff"+key);
         	S3Object object = s3.getObject(new GetObjectRequest("myitem", key));
     		ArrayList<String> temp = displayTextInputStream(object.getObjectContent());
     		SearchResult col = new SearchResult();
@@ -187,7 +189,7 @@ public class S3Instance2 {
         }
         if(!found){
         	objectListing = s3.listObjects(new ListObjectsRequest()
-	                .withBucketName("item")
+	                .withBucketName("myitem")
 	                .withPrefix(""));
         	ArrayList<String> match = new ArrayList<String>();
         	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
@@ -196,11 +198,11 @@ public class S3Instance2 {
 	        	if(bucketname.length == 3){
 	        		int diff=Math.abs(str.length()-bucketname[0].length());
  		        	if(minld(str,bucketname[0])-diff<Math.min(str.length(), bucketname[0].length())/2){
- 		        		match.add(str);
+ 		        		match.add(name);
  		        	}else{
  			        	diff=Math.abs(str.length()-bucketname[1].length());
  			        	if(minld(str,bucketname[1])-diff<Math.min(str.length(), bucketname[1].length())/2){
- 			        		match.add(str);
+ 			        		match.add(name);
  			        	}
  		        	}
 	        	}
