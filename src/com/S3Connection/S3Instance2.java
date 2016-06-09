@@ -34,6 +34,8 @@ import com.data.User;
 public class S3Instance2 {
 	
 	private AmazonS3 s3;
+	private static String itembucket = "itemcollection";
+	private static String personbucket = "personcollection";
 	
 	private S3Instance2()
 	{
@@ -87,13 +89,13 @@ public class S3Instance2 {
     	String personname = user.getUsername().toLowerCase();
     	ArrayList<String> temp = new ArrayList<String>();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName("myperson")
+                .withBucketName(personbucket)
                 .withPrefix(personname));
         if(objectListing.getObjectSummaries().size()==0){
         	return temp;
         }
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
-        	S3Object object = s3.getObject(new GetObjectRequest("myperson", objectSummary.getKey()));
+        	S3Object object = s3.getObject(new GetObjectRequest(personbucket, objectSummary.getKey()));
         	System.out.println(objectSummary.getKey());
         	ArrayList<String> t = displayTextInputStream(object.getObjectContent());
     		if(user.getPassword().equals(t.get(1))){
@@ -108,7 +110,7 @@ public class S3Instance2 {
     public boolean createPerson(User user) throws IOException{
     	String personname = user.getUsername().toLowerCase()+"-"+user.getTel();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName("myperson")
+                .withBucketName(personbucket)
                 .withPrefix(user.getUsername().toLowerCase()));
         if(objectListing.getObjectSummaries().size()!=0){
         	return false;
@@ -116,7 +118,7 @@ public class S3Instance2 {
     	ArrayList<String> temp = new ArrayList<String>();
     	temp.add(user.getPassword());
     	temp.add(user.getConfirmpassword());	
-    	s3.putObject(new PutObjectRequest("myperson", personname, createSampleFile(temp)));
+    	s3.putObject(new PutObjectRequest(personbucket, personname, createSampleFile(temp)));
     	return true;
     }
 	
@@ -130,25 +132,25 @@ public class S3Instance2 {
 		content.add(detail.getImgpath());
 		content.add(detail.getSellername().toLowerCase());
 		content.add(detail.getSellertel());
-		s3.putObject(new PutObjectRequest("myitem", objname, createSampleFile(content)));
+		s3.putObject(new PutObjectRequest(itembucket, objname, createSampleFile(content)));
     	String personname = detail.getSellername().toLowerCase()+"-"+detail.getSellertel();
     	System.out.println(personname);
-    	S3Object object = s3.getObject(new GetObjectRequest("myperson", personname));
+    	S3Object object = s3.getObject(new GetObjectRequest(personbucket, personname));
 		ArrayList<String> temp = displayTextInputStream(object.getObjectContent());
 		temp.add(objname);
-    	s3.putObject(new PutObjectRequest("myperson", personname, createSampleFile(temp)));
+    	s3.putObject(new PutObjectRequest(personbucket, personname, createSampleFile(temp)));
 		return itemId;
 	}
 	
 	public boolean delete(String category, String itemname, String itemid, String personname) throws IOException{
     	String name1 = category.toLowerCase()+"-"+itemname+"-"+itemid;
-    	s3.deleteObject("myitem", name1);
+    	s3.deleteObject(itembucket, name1);
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName("myperson")
+                .withBucketName(personbucket)
                 .withPrefix(personname));
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
         	String name2 = objectSummary.getKey();
-        	S3Object object = s3.getObject(new GetObjectRequest("myperson", name2));
+        	S3Object object = s3.getObject(new GetObjectRequest(personbucket, name2));
     		ArrayList<String> temp = displayTextInputStream(object.getObjectContent());
     		System.out.println(temp.get(2));
     		for(int i=0; i<temp.size(); i++){
@@ -156,7 +158,7 @@ public class S3Instance2 {
     				temp.remove(i);
     			}
     		}
-    		s3.putObject(new PutObjectRequest("myperson", name2, createSampleFile(temp)));
+    		s3.putObject(new PutObjectRequest(personbucket, name2, createSampleFile(temp)));
         }
     	return true;
 	 }
@@ -166,7 +168,7 @@ public class S3Instance2 {
     	Boolean found = false;
     	ArrayList<SearchResult> ret=new ArrayList<SearchResult>();
         ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName("myitem")
+                .withBucketName(itembucket)
                 .withPrefix(str));
         if(objectListing.getObjectSummaries().size()!=0){
         	found = true;
@@ -174,7 +176,7 @@ public class S3Instance2 {
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
         	String key = objectSummary.getKey();
         	System.out.println("fffffffffffff"+key);
-        	S3Object object = s3.getObject(new GetObjectRequest("myitem", key));
+        	S3Object object = s3.getObject(new GetObjectRequest(itembucket, key));
     		ArrayList<String> temp = displayTextInputStream(object.getObjectContent());
     		SearchResult col = new SearchResult();
     		col.setId(temp.get(0));
@@ -189,7 +191,7 @@ public class S3Instance2 {
         }
         if(!found){
         	objectListing = s3.listObjects(new ListObjectsRequest()
-	                .withBucketName("myitem")
+	                .withBucketName(itembucket)
 	                .withPrefix(""));
         	ArrayList<String> match = new ArrayList<String>();
         	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
@@ -208,7 +210,7 @@ public class S3Instance2 {
 	        	}
         	}
         	for(int i=0; i<match.size(); i++){
-        		S3Object object2 = s3.getObject(new GetObjectRequest("myitem", match.get(i)));
+        		S3Object object2 = s3.getObject(new GetObjectRequest(itembucket, match.get(i)));
 	    		ArrayList<String> temp2 = displayTextInputStream(object2.getObjectContent());
 	    		SearchResult col2 = new SearchResult();
 	    		col2.setId(temp2.get(0));
@@ -228,23 +230,23 @@ public class S3Instance2 {
     	ArrayList<Sales> ret = new ArrayList<Sales>();
     	ArrayList<String> temp = new ArrayList<String>();
     	ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
-                .withBucketName("myperson")
+                .withBucketName(personbucket)
                 .withPrefix(username));
         if(objectListing.getObjectSummaries().size()!=0){
         	return ret;
         }
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
         	String name = objectSummary.getKey();
-        	S3Object object = s3.getObject(new GetObjectRequest("myperson", name));
+        	S3Object object = s3.getObject(new GetObjectRequest(personbucket, name));
     		temp = displayTextInputStream(object.getObjectContent());
         }
         for(int i=0; i<temp.size(); i++){
         	objectListing = s3.listObjects(new ListObjectsRequest()
-	                .withBucketName("myitem")
+	                .withBucketName(itembucket)
 	                .withPrefix(temp.get(i)));
         	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
 	        	String name2 = objectSummary.getKey();
-	        	S3Object object2 = s3.getObject(new GetObjectRequest("myitem", name2));
+	        	S3Object object2 = s3.getObject(new GetObjectRequest(itembucket, name2));
 	    		ArrayList<String> temp2 = displayTextInputStream(object2.getObjectContent());
 	    		Sales putin = new Sales();
 	    		putin.setId(temp2.get(0));
