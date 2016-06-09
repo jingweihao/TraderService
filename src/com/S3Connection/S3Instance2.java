@@ -232,7 +232,7 @@ public class S3Instance2 {
     	ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName(personbucket)
                 .withPrefix(username));
-        if(objectListing.getObjectSummaries().size()!=0){
+        if(objectListing.getObjectSummaries().size()==0){
         	return ret;
         }
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
