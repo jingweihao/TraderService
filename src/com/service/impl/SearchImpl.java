@@ -5,7 +5,7 @@ import java.util.*;
 
 import javax.jws.WebService;
 
-import com.S3Connection.S3Instance;
+import com.S3Connection.S3Instance2;
 import com.data.SearchResult;
 import com.service.Search;
 
@@ -16,7 +16,7 @@ public class SearchImpl implements Search
      {
     	//S3
     	System.out.println("doSearch Service~~for " + keyword);    	 
-    	S3Instance s3=S3Instance.getInstance();
+    	S3Instance2 s3=S3Instance2.getInstance();
     	
     	ArrayList<SearchResult> searchlist = new ArrayList<SearchResult>();
 // 		for(int i = 0; i < 50; i++)

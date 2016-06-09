@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.*;
 import javax.jws.WebService;
 
-import com.S3Connection.S3Instance;
+import com.S3Connection.S3Instance2;
 import com.data.Sales;
 import com.service.PersonalSales;
 
@@ -15,7 +15,7 @@ public class PersonalSalesImpl implements PersonalSales
 	public ArrayList<Sales> getSales(String username) 
 	{
 		// TODO: S3
-		S3Instance s3 = S3Instance.getInstance();
+		S3Instance2 s3 = S3Instance2.getInstance();
 		ArrayList<Sales> list = new ArrayList<Sales>();
 		try {
 			list = s3.searchPerson(username);
