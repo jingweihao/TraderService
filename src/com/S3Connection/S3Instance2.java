@@ -232,20 +232,20 @@ public class S3Instance2 {
     	ObjectListing objectListing = s3.listObjects(new ListObjectsRequest()
                 .withBucketName(personbucket)
                 .withPrefix(username));
-        if(objectListing.getObjectSummaries().size()==0){
-        	return ret;
-        }
+//        if(objectListing.getObjectSummaries().size()==0){
+//        	return ret;
+//        }
         for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
         	String name = objectSummary.getKey();
         	S3Object object = s3.getObject(new GetObjectRequest(personbucket, name));
     		temp = displayTextInputStream(object.getObjectContent());
         }
         for(int i=2; i<temp.size(); i++){
-        	ObjectListing objectListing2 = s3.listObjects(new ListObjectsRequest()
-                    .withBucketName(itembucket)
-                    .withPrefix(temp.get(i)));
-        	for(S3ObjectSummary objectSummary2 : objectListing2.getObjectSummaries()){
-	        	String name2 = objectSummary2.getKey();
+        	objectListing = s3.listObjects(new ListObjectsRequest()
+	                .withBucketName(itembucket)
+	                .withPrefix(temp.get(i)));
+        	for(S3ObjectSummary objectSummary : objectListing.getObjectSummaries()){
+	        	String name2 = objectSummary.getKey();
 	        	S3Object object2 = s3.getObject(new GetObjectRequest(itembucket, name2));
 	    		ArrayList<String> temp2 = displayTextInputStream(object2.getObjectContent());
 	    		Sales putin = new Sales();
