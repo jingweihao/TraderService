@@ -10,7 +10,7 @@ import com.service.DeleteItem;
 @WebService(endpointInterface = "com.service.DeleteItem", serviceName = "DeleteItemService")
 public class DeleteItemImpl implements DeleteItem
 {
-	public boolean deleteItem(String category, String itemname, String itemid) 
+	public boolean deleteItem(String category, String itemname, String itemid, String sellername) 
 	{
         //S3
 		boolean ret=false;
