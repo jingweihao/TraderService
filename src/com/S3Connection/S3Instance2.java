@@ -42,12 +42,11 @@ public class S3Instance2 {
 		AWSCredentials credentials = null;
         try {
             credentials = new ProfileCredentialsProvider("default").getCredentials();
-//        	credentials = new BasicAWSCredentials("");
         } catch (Exception e) {
             throw new AmazonClientException(
                     "Cannot load the credentials from the credential profiles file. " +
                     "Please make sure that your credentials file is at the correct " +
-                    "location (/Users/xiaofeng/.aws/credentials), and is in valid format.",
+                    "location (XXXX), and is in valid format.",
                     e);
         }
         s3 = new AmazonS3Client(credentials);

@@ -22,5 +22,11 @@ public interface GetService
 	public User VerifyService(User user);
 	
 	public boolean RegisterService(User user);
-		
+	
+	public String Hello1Service(String person, int ith);
+	
+	public ArrayList<SearchResult> TestSearch(String keyword, int ith);
+	
+	public ArrayList<Sales> TestSales(String username, int ith);
+			
 }
